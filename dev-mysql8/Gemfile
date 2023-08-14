@@ -161,7 +161,7 @@ group :test do
   gem "selenium-webdriver"
 
   # For testing on selenium against ff, chrome, edge and ie
-  gem 'webdrivers'
+  # gem 'webdrivers'
 
   # gem 'rails-controller-testing'
 
