@@ -1,6 +1,6 @@
 FROM ruby:3.3
 LABEL org.opencontainers.image.authors='leifcr@gmail.com'
-LABEL description='Image for running rails 5 apps on kubernetes, with common gems preinstalled. Based on ruby:2.6 image'
+LABEL description='Image for running rails 7 apps on kubernetes, with common gems preinstalled. Based on ruby:3.3 image'
 
 ENV APP_HOME /app
 ENV LANG C.UTF-8
@@ -16,6 +16,13 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Add mysql8
+RUN apt-get update && apt-get install -y lsb-release && \
+    wget https://repo.mysql.com/mysql-apt-config_0.8.33-1_all.deb && \
+    echo "mysql-apt-config mysql-apt-config/select-server select mysql-8.0" | debconf-set-selections && \
+    DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.33-1_all.deb
+
 # Install pkgs
 RUN apt-get update -q && apt-get upgrade -y \
        && apt-get install -y \
@@ -30,9 +37,10 @@ RUN apt-get update -q && apt-get upgrade -y \
        wget \
        curl \
        nodejs \
-       yarn \
-    && apt-get install -y google-chrome-stable --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* && \
+       yarn
+
+RUN apt-get install -y google-chrome-stable --no-install-recommends
+RUN rm -rf /var/lib/apt/lists/* && \
     set -x && \
     mkdir $APP_HOME && \
     groupadd -g 1001 rails && \

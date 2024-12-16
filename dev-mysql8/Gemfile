@@ -196,7 +196,7 @@ group :development do
   # Better ruby/rails console
   # gem 'pry-rails'
   # gem 'pry-toys'
-  # Issues with rails 6 + pry-byebug
+  # Issues with rails 7 + pry-byebug
   # gem 'pry-byebug'
 
   gem 'rubocop-rails'

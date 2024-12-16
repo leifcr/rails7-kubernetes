@@ -1,6 +1,6 @@
 FROM ruby:3.3
 LABEL org.opencontainers.image.authors='leifcr@gmail.com'
-LABEL description='Image for running rails 5 apps on kubernetes, with common gems preinstalled. Based on ruby:2.6 image'
+LABEL description='Image for running rails 7 apps on kubernetes, with common gems preinstalled. Based on ruby:3.3 image'
 
 ENV APP_HOME /app
 ENV LANG C.UTF-8
@@ -28,14 +28,16 @@ RUN apt-get update -q && apt-get upgrade -y \
        wget \
        curl \
        nodejs \
-       yarn \
-    && apt-get install -y google-chrome-stable --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* && \
+       yarn
+
+RUN apt-get install -y google-chrome-stable --no-install-recommends
+RUN rm -rf /var/lib/apt/lists/* && \
     set -x && \
     mkdir $APP_HOME && \
     groupadd -g 1001 rails && \
     useradd -s /bin/bash -m -d /home/rails --uid 1001 -g rails rails && \
     chown rails:rails /app
+
 
 # Copy Imagemagick policy to allow converting PDF to thumbnails
 COPY imagemagick_policy.xml /etc/ImageMagick-6/policy.xml
