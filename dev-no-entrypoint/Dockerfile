@@ -28,9 +28,9 @@ RUN apt-get update -q && apt-get upgrade -y \
        wget \
        curl \
        nodejs \
-       yarn \
-    && apt-get install -y google-chrome-stable --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* && \
+       yarn
+RUN apt-get install -y google-chrome-stable --no-install-recommends
+RUN rm -rf /var/lib/apt/lists/* && \
     set -x && \
     mkdir $APP_HOME && \
     groupadd -g 1001 rails && \
