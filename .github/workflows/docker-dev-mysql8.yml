@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'dev-no-entrypoint/**'
+      - 'dev-mysql8/**'
   workflow_dispatch:
 jobs:
   docker-no-entrypoint:

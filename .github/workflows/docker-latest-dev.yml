@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'dev-no-entrypoint/**'
+      - 'dev/**'
   workflow_dispatch:
 jobs:
   docker-no-entrypoint:
