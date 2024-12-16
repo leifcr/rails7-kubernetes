@@ -1,4 +1,4 @@
-FROM ruby:3.1
+FROM ruby:3.3
 LABEL org.opencontainers.image.authors='leifcr@gmail.com'
 LABEL description='Image for running rails 5 apps on kubernetes, with common gems preinstalled. Based on ruby:2.6 image'
 
@@ -7,7 +7,7 @@ ENV LANG C.UTF-8
 
 # For stretch:
 # RUN  apt-get install -y apt-transport-https ca-certificates gnupg wget --no-install-recommends && \
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update -q && apt-get upgrade -y \
@@ -45,7 +45,7 @@ WORKDIR $APP_HOME
 # Add Gemfile
 COPY --chown=rails:rails Gemfile Gemfile.lock ./
 # Install gems
-RUN gem install bundler && BUNDLE_WITHOUT="development:test" bundle install --jobs 20 --retry 5
+RUN gem install bundler && bundle --version && BUNDLE_WITHOUT="development:test" bundle install --jobs 20 --retry 5
 
 # Set entry point to bundle exec, as all cmd's with rails should be prepended
 ENTRYPOINT ["docker-entrypoint.sh"]

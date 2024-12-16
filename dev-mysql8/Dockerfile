@@ -1,4 +1,4 @@
-FROM ruby:3.1
+FROM ruby:3.3
 LABEL org.opencontainers.image.authors='leifcr@gmail.com'
 LABEL description='Image for running rails 5 apps on kubernetes, with common gems preinstalled. Based on ruby:2.6 image'
 
@@ -8,8 +8,8 @@ ENV LANG C.UTF-8
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3A79BD29
 # RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && echo "deb https://repo.mysql.com/apt/debian/ bullseye mysql-8.0" | tee /etc/apt/sources.list.d/mysqlclient.list \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
+    && echo "deb https://repo.mysql.com/apt/debian/ bookworm mysql-8.0" | tee /etc/apt/sources.list.d/mysqlclient.list \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
