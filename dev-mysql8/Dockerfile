@@ -8,14 +8,17 @@ ENV LANG C.UTF-8
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3A79BD29
 # RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
-RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
-    && echo "deb https://repo.mysql.com/apt/debian/ bookworm mysql-8.0" | tee /etc/apt/sources.list.d/mysqlclient.list \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update -q && apt-get upgrade -y \
-    && apt-get install -y \
+# Node
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash -
+# Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+# Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# Install pkgs
+RUN apt-get update -q && apt-get upgrade -y \
+       && apt-get install -y \
        build-essential \
        libxml2-dev \
        libxslt1-dev \

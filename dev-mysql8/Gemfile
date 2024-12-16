@@ -186,8 +186,8 @@ group :development do
 
   gem 'debug'
 
-  # For reloading during devel
-  gem 'guard-livereload', require: false
+  # For reloading during devel - Only add if needed
+  # gem 'guard-livereload', require: false
   gem 'guard-rspec', require: false
 
   # Allow mailer_preview to have access to params
