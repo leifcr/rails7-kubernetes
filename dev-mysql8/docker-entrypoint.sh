@@ -1,7 +1,7 @@
 #!/bin/bash
 # Note: due to gitlab autodevops not setting args to any value, fallback to bundle exec rails server as default
 set -e
-echo "Rails entrypoint running: $1"
+echo "Rails 8.0 docker image entrypoint running: $1"
 case "$1" in
         bundle*)
         command="$1";;
@@ -11,9 +11,11 @@ case "$1" in
         command="bundle exec $@";;
         middleman|nanoc|pry|puma|rackup|rainbows|rails|rake|rspec|shotgun|sidekiq|spec)
         command="bundle exec $@";;
-        spork|spring|strainer|tailor|taps|thin|thor|unicorn|unicorn_rails|webpacker|yarn)
+        shakapacker|spork|spring|strainer|tailor|taps|thin|thor|unicorn|unicorn_rails|webpacker|yarn)
         command="bundle exec $@";;
         ./bin/webpack-dev-server|bin/webpack-dev-server|./bin/webpack|bin/webpack)
+        command="bundle exec $@";;
+        ./bin/shakapacker-dev-server|bin/shakapacker-dev-server|./bin/shakapacker|bin/shakapacker)
         command="bundle exec $@";;
         "")
         command="bundle exec rails server";;
