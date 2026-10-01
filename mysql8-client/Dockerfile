@@ -5,23 +5,24 @@ LABEL description='Image for running rails 7 apps on kubernetes with mysql-8 cli
 ENV APP_HOME /app
 ENV LANG C.UTF-8
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3A79BD29
-# RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+RUN apt-get update -q && apt-get install -y --no-install-recommends ca-certificates curl gnupg wget \
+    && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2025 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg \
+    && curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /etc/apt/keyrings/yarn.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 
 # Node
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash -
-# Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-# Yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # Add mysql8
-RUN apt-get update && apt-get install -y lsb-release && \
-    wget https://repo.mysql.com/mysql-apt-config_0.8.33-1_all.deb && \
-    echo "mysql-apt-config mysql-apt-config/select-server select mysql-8.0" | debconf-set-selections && \
-    DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.33-1_all.deb
+# Configure the repo directly instead of via mysql-apt-config, whose debconf
+# prompt hangs the build when apt-get upgrade pulls in a newer version.
+# MySQL 8.0 has no packages for Debian trixie, so use 8.4 LTS
+RUN . /etc/os-release \
+    && echo "deb http://repo.mysql.com/apt/debian $VERSION_CODENAME mysql-8.4-lts mysql-tools" > /etc/apt/sources.list.d/mysql.list
 
 # Install pkgs
 RUN apt-get update -q && apt-get upgrade -y \
@@ -31,7 +32,7 @@ RUN apt-get update -q && apt-get upgrade -y \
        libxslt1-dev \
        ghostscript \
        libmysqlclient-dev \
-       libmysqlclient21 \
+       libmysqlclient24 \
        mysql-client \
        postgresql-client \
        wget \

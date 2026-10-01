@@ -5,16 +5,16 @@ LABEL description='Image for running rails 7 apps on kubernetes, with common gem
 ENV APP_HOME /app
 ENV LANG C.UTF-8
 
-# For stretch:
-# RUN  apt-get install -y apt-transport-https ca-certificates gnupg wget --no-install-recommends && \
+RUN apt-get update -q && apt-get install -y --no-install-recommends ca-certificates curl gnupg wget \
+    && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /etc/apt/keyrings/yarn.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
+
 # Node
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash -
-# Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-# Yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 # Install pkgs
 RUN apt-get update -q && apt-get upgrade -y \
        && apt-get install -y \
