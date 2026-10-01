@@ -1,7 +1,10 @@
 on:
   push:
     paths:
-      - './**'
+      - 'Dockerfile'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+      - 'docker-entrypoint.sh'
   workflow_dispatch:
 jobs:
   docker-no-entrypoint:

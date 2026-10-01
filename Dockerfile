@@ -5,6 +5,7 @@ LABEL description='Image for running rails 7 apps on kubernetes, with common gem
 ENV APP_HOME /app
 ENV LANG C.UTF-8
 
+# Debian trixie has no apt-key, so repo keys go in /etc/apt/keyrings with signed-by
 RUN apt-get update -q && apt-get install -y --no-install-recommends ca-certificates curl gnupg wget \
     && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /etc/apt/keyrings \
